@@ -1,0 +1,50 @@
+// Edit these arrays to update the site content
+const socials = [
+  { name: 'Telegram', url: 'https://t.me/NoKnockWarrants', icon: 'fab fa-telegram' },
+  { name: 'Cash App', url: 'https://cash.app/$itsferntoyou', icon: 'fa-solid fa-dollar-sign' },
+  { name: 'PayPal', url: 'https://www.paypal.com/qrcodes/managed/9fa9a1c4-d1a0-4b0f-9ac0-9ad73eca3b44?utm_source=consapp_download', icon: 'fab fa-paypal' },
+];
+
+// sample shows (date ISO, venue, city, time, optional ticket link)
+const shows = [
+  { date: '2026-03-05', venue: 'The Blue Room', city: 'Austin, TX', time: '8:00 PM', ticket: '#' },
+  { date: '2026-04-10', venue: 'Main Street Stage', city: 'Dallas, TX', time: '9:00 PM', ticket: '#' },
+];
+
+function formatDate(iso){
+  try {
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, { month:'short', day:'numeric', year:'numeric' });
+  } catch(e){ return iso }
+}
+
+function renderShows(){
+  const el = document.getElementById('shows-list');
+  el.innerHTML = '';
+  if(!shows.length){
+    el.innerHTML = '<li class="card">No upcoming shows — check back soon.</li>';
+    return;
+  }
+  shows.forEach(s => {
+    const li = document.createElement('li');
+    li.className = 'show-item';
+    const meta = document.createElement('div'); meta.className = 'show-meta';
+    const date = document.createElement('div'); date.className = 'show-date'; date.textContent = `${formatDate(s.date)} • ${s.time}`;
+    const venue = document.createElement('div'); venue.className = 'show-venue'; venue.textContent = `${s.venue} — ${s.city}`;
+    meta.appendChild(date); meta.appendChild(venue);
+    const actions = document.createElement('div');
+    if(s.ticket && s.ticket !== '#'){
+      const a = document.createElement('a'); a.href = s.ticket; a.target = '_blank'; a.rel = 'noopener noreferrer'; a.textContent = 'Tickets';
+      actions.appendChild(a);
+    } else {
+      const t = document.createElement('span'); t.style.color = '#9aa4b2'; t.textContent = 'No tickets';
+      actions.appendChild(t);
+    }
+    li.appendChild(meta); li.appendChild(actions);
+    el.appendChild(li);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderShows();
+});
